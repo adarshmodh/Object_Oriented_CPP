@@ -3,6 +3,16 @@
 
 using namespace std;
 
+/*
+Sample Input 1
+9
+
+Sample Output 1
+result=3
+returning control flow to caller
+
+*/
+
 int largest_proper_divisor(int n) {
     if (n == 0) {
         throw invalid_argument("largest proper divisor is not defined for n=0");

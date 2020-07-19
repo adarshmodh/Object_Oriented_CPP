@@ -3,6 +3,17 @@
 
 using namespace std;
 
+/*
+Sample Input 0
+2
+standard 3 1
+apartment 1 1
+
+Sample Output 0
+500
+
+*/
+
 class HotelRoom {
 public:
     HotelRoom(int bedrooms, int bathrooms) 

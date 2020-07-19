@@ -2,6 +2,15 @@
 
 using namespace std;
 
+/*
+Sample Input 0
+john doe registered
+
+Sample Output 0
+first_name=john,last_name=doe registered
+
+*/
+
 class Person {
 public:
     Person(const string& first_name, const string& last_name) : first_name_(first_name), last_name_(last_name) {}
