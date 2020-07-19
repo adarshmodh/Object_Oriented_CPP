@@ -1,2 +1,2 @@
 # Object_Oriented_CPP
-Cplusplus (C++) implementation of object oriented design for the Deck of cards problem
+Cplusplus (C++) implementation of practice problems. 
