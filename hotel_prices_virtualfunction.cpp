@@ -17,7 +17,7 @@ Sample Output 0
 class HotelRoom {
 public:
     HotelRoom(int bedrooms, int bathrooms) 
-    : bedrooms_(bedrooms), bathrooms_(bathrooms) {}
+    : bedrooms_(bedrooms), bathrooms_(bathrooms){}
     
     virtual int get_price() {
         return 50*bedrooms_ + 100*bathrooms_;
