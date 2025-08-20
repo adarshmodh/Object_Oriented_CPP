@@ -59,12 +59,141 @@ class simulator
 */
    
 #include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
 
+// -------- Base Class -----------
+class Agent {
+protected:
+    int state;
+    int init_state;
+    int step_size;
+    std::string name;
 
-int main()
-{
-    std::cout << "Practice makes Perfect!" << std::endl;
+public:
+    Agent(const std::string& n, int init, int step)
+        : state(init), init_state(init), step_size(step), name(n) {
+        std::cout << name << " created at position " << state << "\n";
+    }
+
+    virtual ~Agent() {
+        std::cout << name << " destroyed\n";
+    }
+
+    // Query current state
+    int queryState() const { return state; }
+
+    // Move forward
+    virtual void forwardStep() { state += step_size; }
+
+    // Move backward
+    virtual void backwardStep() { state -= step_size; }
+
+    // Reset to initial state
+    virtual void resetState() { state = init_state; }
+
+    std::string getName() const { return name; }
+
+    // Unique extra action
+    virtual void extraAction() = 0;
+};
+
+// -------- Derived Classes --------
+class Car : public Agent {
+public:
+    Car(int init) : Agent("Car", init, 2) {}
+
+    void extraAction() override {
+        std::cout << "Car parks at position " << state << "\n";
+    }
+};
+
+class Pedestrian : public Agent {
+public:
+    Pedestrian(int init) : Agent("Pedestrian", init, 1) {}
+
+    void extraAction() override {
+        std::cout << "Pedestrian runs from position " << state
+                  << " to position " << (state + 2) << "\n";
+    }
+};
+
+class Truck : public Agent {
+public:
+    Truck(int init) : Agent("Truck", init, 3) {}
+
+    void extraAction() override {
+        std::cout << "Truck unloads at position " << state << "\n";
+    }
+};
+
+// -------- Simulator ------------
+class Simulator {
+private:
+    std::vector<std::unique_ptr<Agent>> agents;
+
+public:
+    Simulator() {
+        // Add all agents
+        agents.push_back(std::make_unique<Car>(0));
+        agents.push_back(std::make_unique<Pedestrian>(0));
+        agents.push_back(std::make_unique<Truck>(0));
+    }
+
+    ~Simulator() { std::cout << "Simulator destroyed\n"; }
+
+    // Query all agent states
+    void queryStates() const {
+        for (const auto& agent : agents) {
+            std::cout << agent->getName() << " is at position "
+                      << agent->queryState() << "\n";
+        }
+    }
+
+    // Step all agents forward
+    void stepForward() {
+        for (auto& agent : agents) agent->forwardStep();
+    }
+
+    // Step all agents backward
+    void stepBackward() {
+        for (auto& agent : agents) agent->backwardStep();
+    }
+
+    // Reset all agents
+    void reset() {
+        for (auto& agent : agents) agent->resetState();
+    }
+
+    // Perform extra actions
+    void doExtras() {
+        for (auto& agent : agents) agent->extraAction();
+    }
+};
+
+// -------- Main Test ------------
+int main() {
+    Simulator sim;
+
+    std::cout << "\nInitial states:\n";
+    sim.queryStates();
+
+    std::cout << "\nStep forward:\n";
+    sim.stepForward();
+    sim.queryStates();
+
+    std::cout << "\nStep backward:\n";
+    sim.stepBackward();
+    sim.queryStates();
+
+    std::cout << "\nExtra actions:\n";
+    sim.doExtras();
+
+    std::cout << "\nResetting:\n";
+    sim.reset();
+    sim.queryStates();
+
     return 0;
-    
 }
 
