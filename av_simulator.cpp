@@ -6,58 +6,84 @@
 // car : parks 
 // pedestrians : run
 
-
-
-/*
-
-parent class agent
-  public: int state 
-  private: int step_size 
-  
-  def query_current_state
-  
-  def forward_step 
-  
-  def backward_step 
-  def reset_state
-
-
-child class simulator  
-
-  agent truck; 
-  
-  
-  
-  def query_state
-  def forward_step 
-  def backward_step 
-  def reset_state
-
-
-///***************
-parent class agent: 
-  var state
-  def query_state
-      return state
-  def reset
-  
-child truck: agent()
-  def forward_step
-  def backward_step
-
-child car: agent()
-  def forward_step
-  def backward_step
-
-
-class simulator 
-  def reset 
-  def step_forward
-  def step_backward
-
-
 */
-   
+
+#include <iostream>
+using namespace std;
+
+// ---- Base class ----
+class Agent {
+protected:
+    int state, init_state, step_size;
+public:
+    Agent(int init, int step) : state(init), init_state(init), step_size(step) {}
+    virtual ~Agent() {}
+
+    int queryState() const { return state; }
+    virtual void forwardStep() { state += step_size; }
+    virtual void backwardStep() { state -= step_size; }
+    virtual void resetState() { state = init_state; }
+
+    virtual void extraAction() = 0; // pure virtual
+};
+
+// ---- Derived classes ----
+class Car : public Agent {
+public:
+    Car(int init=0) : Agent(init, 2) {}
+    void extraAction() override { cout << "Car parks\n"; }
+};
+
+class Pedestrian : public Agent {
+public:
+    Pedestrian(int init=0) : Agent(init, 1) {}
+    void extraAction() override { cout << "Pedestrian runs\n"; }
+};
+
+class Truck : public Agent {
+public:
+    Truck(int init=0) : Agent(init, 3) {}
+    void extraAction() override { cout << "Truck unloads\n"; }
+};
+
+// ---- Simulator ----
+class Simulator {
+    Car car;
+    Pedestrian ped;
+    Truck truck;
+public:
+    Simulator() : car(0), ped(0), truck(0) {}
+
+    void query() {
+        cout << "Car: " << car.queryState()
+             << " Pedestrian: " << ped.queryState()
+             << " Truck: " << truck.queryState() << "\n";
+    }
+
+    void stepForward() { car.forwardStep(); ped.forwardStep(); truck.forwardStep(); }
+    void stepBackward(){ car.backwardStep(); ped.backwardStep(); truck.backwardStep(); }
+    void reset()       { car.resetState(); ped.resetState(); truck.resetState(); }
+    void extras()      { car.extraAction(); ped.extraAction(); truck.extraAction(); }
+};
+
+// ---- Main ----
+int main() {
+    Simulator sim;
+    sim.query();
+
+    sim.stepForward();
+    sim.query();
+
+    sim.stepBackward();
+    sim.query();
+
+    sim.extras();
+
+    sim.reset();
+    sim.query();
+}
+
+________________________________________________________________________________________________________________________________________________  
 #include <iostream>
 #include <memory>
 #include <string>
