@@ -6,7 +6,6 @@
 // car : parks 
 // pedestrians : run
 
-*/
 
 #include <iostream>
 using namespace std;
